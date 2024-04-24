@@ -1,55 +1,35 @@
-<!DOCTYPE html>
-<html class="no-js" lang="en">
+<!DOCTYPE html> 
+<html>
+
 <head>
-
-   <meta charset="utf-8">
-	<title>Cloud Midterm Project</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
-
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-	<!-- Load CSS -->
-   <link rel="stylesheet" href="css/default.css">
-	<link rel="stylesheet" href="css/layout.css">
-   <link rel="stylesheet" href="css/media-queries.css">
-   <link rel="stylesheet" href="css/magnific-popup.css">
-
-   <!-- Load Javascripts -->
-
-	<link rel="shortcut icon" href="favicon.png" >
-
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Cloud Midterm Project</title>
+   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-   <header id="home">
-
-      <div class="row banner">
-         <div class="banner-text">
-            <h1 class="responsive-headline">Simple Translater</h1> 
-            <p>With Azure Translate</p> 
-         </div>
-      </div>
-
-   </header>
-
-   <footer>
-
-      <div class="row">
-
-         <div class="twelve columns">
-
-            <ul class="copyright">
-               <a> Something Something</a>
-                
-            </ul>
-
-         </div>
-
-      </div>
-
-   </footer>
-
+   <div class="panel">
+      <select class="select-lang-in">
+         <option value="en">English</option>
+         <option value="fr">French</option>
+         <option value="es">Spanish</option>
+      </select>
+      <textarea class="text-input" name="text-input"></textarea>
+      
+      <button class="translate-btn">Translate</button>
+   </div>
+   
+   <div class="panel">
+      <select class="select-lang-out">
+         <option value="en">English</option>
+         <option value="fr">French</option>
+         <option value="es">Spanish</option>
+         <textarea class="text-output" name="text-output" readonly></textarea>
+      </select>
+   </div>
+   
 </body>
+<script src="js/main.js"></script>
 
 </html>
