@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net;
 using System.Text;
+using Ganss.Xss;
 
 namespace Company.Function
 {
@@ -27,13 +28,18 @@ namespace Company.Function
         public static HttpResponseMessage Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
         {
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
+            var sanitizer = new HtmlSanitizer();
+            
+            string requestBody = sanitizer.Sanitize(new StreamReader(req.Body).ReadToEnd());
             log.LogInformation(requestBody);
             dynamic translationRequest = JsonConvert.DeserializeObject(requestBody);
+            string lang_in = sanitizer.Sanitize(translationRequest.lang_in.Value);
+            string lang_out = sanitizer.Sanitize(translationRequest.lang_out.Value);
+            string text_in = sanitizer.Sanitize(translationRequest.text_in.Value);
 
             // Input and output languages are defined as parameters.
-            string route = $"/translate?api-version=3.0&from={translationRequest.lang_in}&to={translationRequest.lang_out}";
-            string textToTranslate = translationRequest.text_in;
+            string route = $"/translate?api-version=3.0&from={lang_in}&to={lang_out}";
+            string textToTranslate = text_in;
             if (textToTranslate.Length <= 256)
             {
                 object[] body = new object[] { new { Text = textToTranslate } };
@@ -59,10 +65,10 @@ namespace Company.Function
                 var translationResponse = new
                 {
                     _id = -1,
-                    text_in = translationRequest.text_in,
+                    text_in = text_in,
                     text_out = result,
-                    lang_in = translationRequest.lang_in,
-                    lang_out = translationRequest.lang_out
+                    lang_in = lang_in,
+                    lang_out = lang_out
                 };
                 // Serialize the response object to JSON
                 string jsonResponse = JsonConvert.SerializeObject(translationResponse);

@@ -52,7 +52,7 @@ const showHistortRecords = () => {
 
 const azureTranslate = (lang_in, lang_out, text_in) => {
     translationReq = `{"lang_in": "${lang_in}", "lang_out": "${lang_out}", "text_in": "${text_in}"}`;
-
+    functionURL = "https://cloud2runtranslation.azurewebsites.net/api/runtranslation?code=ogsb-rfAnQBhr1dK_uuKGOYTa8iRf6AMBK3ukWtsagiyAzFumgpZwA%3D%3D";
     return fetch("http://localhost:7071/api/RunTranslation", {
         method: "POST",
         mode: "cors",
