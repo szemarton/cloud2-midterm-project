@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -9,27 +9,29 @@
 </head>
 
 <body>
-   <div class="panel">
-      <select class="select-lang-in">
-         <option value="en">English</option>
-         <option value="fr">French</option>
-         <option value="es">Spanish</option>
-      </select>
-      <textarea class="text-input" name="text-input"></textarea>
-      
-      <button class="translate-btn">Translate</button>
+   <div class="container">
+      <div id="header">
+         <h1 class="header-element">Translater demo</h1>
+         <p class="header-element">Disclaimer</p>
+      </div>
+      <div id="panel-input">
+         <select class="lang-selector" id="select-lang-in">
+         </select>
+         <button class="btn" id="translate-btn">Translate</button>
+         <textarea id="text-input" name="text-input" maxlength="250"></textarea>
+      </div>
+      <div id="panel-output">
+         <select class="lang-selector" id="select-lang-out">
+         </select>
+         <textarea id="text-output" name="text-output" readonly></textarea>
+      </div>
+      <div id="footer">
+         <div id="history-container">
+         </div>
+         <button class="btn" id="load-btn">More</button>
+      </div>
    </div>
-   
-   <div class="panel">
-      <select class="select-lang-out">
-         <option value="en">English</option>
-         <option value="fr">French</option>
-         <option value="es">Spanish</option>
-         <textarea class="text-output" name="text-output" readonly></textarea>
-      </select>
-   </div>
-   
+   <script src="js/main.js"></script>
 </body>
-<script src="js/main.js"></script>
 
 </html>
