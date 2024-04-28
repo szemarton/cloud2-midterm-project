@@ -83,7 +83,7 @@ const runTranslation = () => {
     if (langIn.value === langOut.value || textInput.value === "") {
         textOutput.value = textInput.value;
     }
-    else if (textInput.value.length > 420){
+    else if (textInput.value.length > 256){
         textInput.value = "too much text >:|";
     }
     else {

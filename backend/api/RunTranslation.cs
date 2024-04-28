@@ -34,7 +34,7 @@ namespace Company.Function
             // Input and output languages are defined as parameters.
             string route = $"/translate?api-version=3.0&from={translationRequest.lang_in}&to={translationRequest.lang_out}";
             string textToTranslate = translationRequest.text_in;
-            if (textToTranslate.Length <= 420)
+            if (textToTranslate.Length <= 256)
             {
                 object[] body = new object[] { new { Text = textToTranslate } };
                 var translateRequestBody = JsonConvert.SerializeObject(body);
