@@ -69,8 +69,8 @@ const azureTranslate = (lang_in, lang_out, text_in) => {
             return response.json();
         })
         .then((data) => {
-            console.log(JSON.parse(data.text_out));
-            return JSON.parse(data.text_out)[0].translations[0].text;
+            console.log(data.text_out);
+            return data.text_out;
         })
         .catch(error => {
             console.error('Error azureTranslate:', error);
