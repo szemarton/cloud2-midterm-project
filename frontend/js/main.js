@@ -69,8 +69,8 @@ const azureTranslate = (lang_in, lang_out, text_in) => {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
-            return data.text_out;
+            console.log(JSON.parse(data.text_out));
+            return JSON.parse(data.text_out)[0].translations[0].text;
         })
         .catch(error => {
             console.error('Error azureTranslate:', error);
@@ -79,9 +79,12 @@ const azureTranslate = (lang_in, lang_out, text_in) => {
 }
 
 const runTranslation = () => {
-    //if the target and the source lang are the same or the input is empty don`t call azure functions
+    //if the target and the source lang are the same or the input is empty or the input is too long don`t call azure functions
     if (langIn.value === langOut.value || textInput.value === "") {
         textOutput.value = textInput.value;
+    }
+    else if (textInput.value.length > 420){
+        textInput.value = "too much text >:|";
     }
     else {
         azureTranslate(langIn.value, langOut.value, textInput.value)

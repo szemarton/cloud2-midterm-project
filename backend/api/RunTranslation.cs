@@ -15,6 +15,14 @@ namespace Company.Function
 {
     public static class RunTranslation
     {
+        private static readonly string accesskey = "AzureAIservicesAccessKey";
+        private static readonly string location = "AzureAIservicesLocation";
+        private static readonly string endpoint = "AzureAIservicesEndpoint";
+        private static string GetEnvironmentVariable(string name)
+        {
+            return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
+        }
+
         [FunctionName("RunTranslation")]
         public static HttpResponseMessage Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
@@ -23,25 +31,63 @@ namespace Company.Function
             log.LogInformation(requestBody);
             dynamic translationRequest = JsonConvert.DeserializeObject(requestBody);
 
-            var translationResponse = new{
-                _id = -1,
-                text_in = translationRequest.text_in,
-                text_out = "translationRequest.text_out",
-                lang_in = translationRequest.lang_in,
-                lang_out = translationRequest.lang_out
-            };
-            
-            // Serialize the response object to JSON
-            string jsonResponse = JsonConvert.SerializeObject(translationResponse);
-            log.LogInformation($"Response JSON: {jsonResponse}");
-
-            // Return the JSON response
-            HttpResponseMessage Response = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            // Input and output languages are defined as parameters.
+            string route = $"/translate?api-version=3.0&from={translationRequest.lang_in}&to={translationRequest.lang_out}";
+            string textToTranslate = translationRequest.text_in;
+            if (textToTranslate.Length <= 420)
             {
-                Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json"),
-                StatusCode = System.Net.HttpStatusCode.OK,
-            };
-            return Response;
+                object[] body = new object[] { new { Text = textToTranslate } };
+                var translateRequestBody = JsonConvert.SerializeObject(body);
+
+                var client = new HttpClient();
+                var request = new HttpRequestMessage();
+
+                // Build the request.
+                request.Method = HttpMethod.Post;
+                request.RequestUri = new Uri(GetEnvironmentVariable(endpoint) + route);
+                request.Content = new StringContent(translateRequestBody, Encoding.UTF8, "application/json");
+                request.Headers.Add("Ocp-Apim-Subscription-Key", GetEnvironmentVariable(accesskey));
+                // location required if you're using a multi-service or regional (not global) resource.
+                request.Headers.Add("Ocp-Apim-Subscription-Region", GetEnvironmentVariable(location));
+
+                // Send the request and get response.
+                HttpResponseMessage response = client.Send(request);
+                // Read response as a string.
+                var result = new StreamReader(response.Content.ReadAsStream()).ReadToEnd();
+                log.LogInformation(result);
+
+                var translationResponse = new
+                {
+                    _id = -1,
+                    text_in = translationRequest.text_in,
+                    text_out = result,
+                    lang_in = translationRequest.lang_in,
+                    lang_out = translationRequest.lang_out
+                };
+                // Serialize the response object to JSON
+                string jsonResponse = JsonConvert.SerializeObject(translationResponse);
+                log.LogInformation($"Response JSON: {jsonResponse}");
+
+                // Return the JSON response
+                HttpResponseMessage Response = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+                {
+                    Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json"),
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                };
+                return Response;
+            }
+            else
+            {
+                // Return the JSON response
+                HttpResponseMessage Response = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+                {
+                    Content = new StringContent("{\"error\" : \"too much text\"}", Encoding.UTF8, "application/json"),
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                };
+                return Response;
+            }
+
+
         }
     }
 }
