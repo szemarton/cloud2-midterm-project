@@ -1,3 +1,9 @@
 {
-    "livePreview.defaultPreviewPath": "/frontend/index.html"
+    "livePreview.defaultPreviewPath": "/frontend/index.html",
+    "azureFunctions.deploySubpath": "backend/api/bin/Release/net6.0/publish",
+    "azureFunctions.projectLanguage": "C#",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectSubpath": "backend/api",
+    "azureFunctions.preDeployTask": "publish (functions)"
 }
